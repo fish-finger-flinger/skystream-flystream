@@ -1,0 +1,14 @@
+{
+  "id": "net.flystream.skystream.plugin",
+  "name": "FlyStream Extensions",
+  "version": "1.0.0",
+  "description": "Scrapes and streams content from flystream.net.",
+  "author": "Developer",
+  "icon": "https://flystream.net",
+  "language": "en",
+  "permissions": [
+    "http",
+    "challenge_browser"
+  ],
+  "entrypoint": "flystream.js"
+}
