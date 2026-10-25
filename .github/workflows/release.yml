@@ -38,7 +38,7 @@ jobs:
             {
               "name": "FlyStream Extensions",
               "version": 1,
-              "url": "https://github.io",
+              "url": "https://github.io/fish-finger-flinger/skystream-flystream",
               "id": "net.flystream.skystream.plugin",
               "authors": ["Developer"],
               "description": "Scrapes and streams content from flystream.net"
