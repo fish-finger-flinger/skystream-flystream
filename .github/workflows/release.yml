@@ -1,34 +1,3 @@
-name: Deploy SkyStream Repository
-
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Configure GitHub Pages Routing
-        uses: actions/configure-pages@v5
-
-      - name: Build Standard Repositories Layout
         run: |
           echo "Building repository registry configuration..."
           
@@ -38,7 +7,7 @@ jobs:
             {
               "name": "FlyStream Extensions",
               "version": 1,
-              "url": "https://github.io/fish-finger-flinger/skystream-flystream",
+              "url": "https://github.io",
               "id": "net.flystream.skystream.plugin",
               "authors": ["Developer"],
               "description": "Scrapes and streams content from flystream.net"
@@ -48,12 +17,3 @@ jobs:
           
           # Create a copy named mega_repo.json for absolute coverage
           cp index.json mega_repo.json
-
-      - name: Upload Pages Package Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages Engines
-        id: deployment
-        uses: actions/deploy-pages@v4
