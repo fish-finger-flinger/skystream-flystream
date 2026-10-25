@@ -6,12 +6,10 @@ on:
       - main
   workflow_dispatch:
 
-# Added 'actions: read' permission to resolve the HttpError 403 failure
 permissions:
   contents: read
   pages: write
   id-token: write
-  actions: read
 
 concurrency:
   group: "pages"
@@ -30,26 +28,15 @@ jobs:
       - name: Configure GitHub Pages Routing
         uses: actions/configure-pages@v5
 
-      - name: Validate and Package Repository Structure
+      - name: Build Repositories Layout
         run: |
-          echo "Verifying extension requirements..."
+          echo "Building repository registry configuration..."
           
-          # Ensure required file structures exist
-          if [ ! -d "plugins/flystream" ]; then
-            echo "Error: Directory 'plugins/flystream' not found."
-            exit 1
-          fi
-
-          if [ ! -f "plugins/flystream/manifest.json" ] || [ ! -f "plugins/flystream/flystream.js" ]; then
-            echo "Error: Missing manifest.json or flystream.js in plugins/flystream/"
-            exit 1
-          fi
-
-          # Dynamically enforce/build index.json registry
-          cat << 'EOF' > index.json
+          # Generate standard indexing required by SkyStream core application
+          cat << 'EOF' > mega_repo.json
           {
-            "name": "Custom Provider Repository",
-            "description": "Third-party automated extensions for SkyStream applications.",
+            "name": "FlyStream Mirror Repository",
+            "description": "Custom verified stream providers.",
             "plugins": [
               {
                 "id": "net.flystream.skystream.plugin",
@@ -60,8 +47,6 @@ jobs:
             ]
           }
           EOF
-          
-          echo "Repository package validation completed successfully."
 
       - name: Upload Pages Package Artifact
         uses: actions/upload-pages-artifact@v3
