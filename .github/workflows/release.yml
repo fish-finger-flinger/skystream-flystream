@@ -28,11 +28,11 @@ jobs:
       - name: Configure GitHub Pages Routing
         uses: actions/configure-pages@v5
 
-      - name: Build Repositories Layout
+      - name: Build Standard Repositories Layout
         run: |
           echo "Building repository registry configuration..."
           
-          # Generate standard indexing required by SkyStream core application
+          # 1. Generate mega_repo.json with explicit absolute URLs
           cat << 'EOF' > mega_repo.json
           {
             "name": "FlyStream Mirror Repository",
@@ -42,7 +42,23 @@ jobs:
                 "id": "net.flystream.skystream.plugin",
                 "name": "FlyStream Extensions",
                 "version": "1.0.0",
-                "url": "plugins/flystream/manifest.json"
+                "url": "https://github.io"
+              }
+            ]
+          }
+          EOF
+
+          # 2. Generate fallback index.json with explicit absolute URLs
+          cat << 'EOF' > index.json
+          {
+            "name": "FlyStream Mirror Repository",
+            "description": "Custom verified stream providers.",
+            "plugins": [
+              {
+                "id": "net.flystream.skystream.plugin",
+                "name": "FlyStream Extensions",
+                "version": "1.0.0",
+                "url": "https://github.io"
               }
             ]
           }
