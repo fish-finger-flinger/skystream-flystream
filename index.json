@@ -1,0 +1,12 @@
+{
+  "name": "Custom Provider Repository",
+  "description": "Third-party extensions for SkyStream applications.",
+  "plugins": [
+    {
+      "id": "net.flystream.skystream.plugin",
+      "name": "FlyStream Extensions",
+      "version": "1.0.0",
+      "url": "plugins/flystream/manifest.json"
+    }
+  ]
+}
