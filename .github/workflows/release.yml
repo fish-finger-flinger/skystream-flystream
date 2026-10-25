@@ -32,37 +32,22 @@ jobs:
         run: |
           echo "Building repository registry configuration..."
           
-          # 1. Generate mega_repo.json with explicit absolute URLs
-          cat << 'EOF' > mega_repo.json
-          {
-            "name": "FlyStream Mirror Repository",
-            "description": "Custom verified stream providers.",
-            "plugins": [
-              {
-                "id": "net.flystream.skystream.plugin",
-                "name": "FlyStream Extensions",
-                "version": "1.0.0",
-                "url": "https://github.io"
-              }
-            ]
-          }
-          EOF
-
-          # 2. Generate fallback index.json with explicit absolute URLs
+          # Generate the proper structure expected by the app
           cat << 'EOF' > index.json
-          {
-            "name": "FlyStream Mirror Repository",
-            "description": "Custom verified stream providers.",
-            "plugins": [
-              {
-                "id": "net.flystream.skystream.plugin",
-                "name": "FlyStream Extensions",
-                "version": "1.0.0",
-                "url": "https://github.io"
-              }
-            ]
-          }
+          [
+            {
+              "name": "FlyStream Extensions",
+              "version": 1,
+              "url": "https://github.io",
+              "id": "net.flystream.skystream.plugin",
+              "authors": ["Developer"],
+              "description": "Scrapes and streams content from flystream.net"
+            }
+          ]
           EOF
+          
+          # Create a copy named mega_repo.json for absolute coverage
+          cp index.json mega_repo.json
 
       - name: Upload Pages Package Artifact
         uses: actions/upload-pages-artifact@v3
