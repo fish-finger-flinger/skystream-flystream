@@ -1,0 +1,73 @@
+name: Deploy SkyStream Repository
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Added 'actions: read' permission to resolve the HttpError 403 failure
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages Routing
+        uses: actions/configure-pages@v5
+
+      - name: Validate and Package Repository Structure
+        run: |
+          echo "Verifying extension requirements..."
+          
+          # Ensure required file structures exist
+          if [ ! -d "plugins/flystream" ]; then
+            echo "Error: Directory 'plugins/flystream' not found."
+            exit 1
+          fi
+
+          if [ ! -f "plugins/flystream/manifest.json" ] || [ ! -f "plugins/flystream/flystream.js" ]; then
+            echo "Error: Missing manifest.json or flystream.js in plugins/flystream/"
+            exit 1
+          fi
+
+          # Dynamically enforce/build index.json registry
+          cat << 'EOF' > index.json
+          {
+            "name": "Custom Provider Repository",
+            "description": "Third-party automated extensions for SkyStream applications.",
+            "plugins": [
+              {
+                "id": "net.flystream.skystream.plugin",
+                "name": "FlyStream Extensions",
+                "version": "1.0.0",
+                "url": "plugins/flystream/manifest.json"
+              }
+            ]
+          }
+          EOF
+          
+          echo "Repository package validation completed successfully."
+
+      - name: Upload Pages Package Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages Engines
+        id: deployment
+        uses: actions/deploy-pages@v4
